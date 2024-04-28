@@ -25,6 +25,16 @@ Intentar en terminal:
 
 En caso de devolver la versión, se asume que la instalación fue finalizada
 
+
+Compilar y ejecutar:
+
+```
+dotnet compile
+dotnet run
+```
+
+
+
 ## Contacto
 De buscar escribir por cualquier motivo, este es mi correo elecrónico:
 jeremiaspini7@gmail.com
