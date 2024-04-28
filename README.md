@@ -10,7 +10,7 @@ Leer y ejecutar con libertad.
 
 instalar el repositorio: 
 ```
-git clone https://github.com/Jludvim/Game_Backend
+git clone https://github.com/Jludvim/Game_Backend.git
 cd Game_Backend
 ```
 
@@ -36,7 +36,7 @@ dotnet run
 
 
 ## Contacto
-De buscar escribir por cualquier motivo, este es mi correo elecrónico:
+De escribir por cualquier motivo, este es mi correo elecrónico:
 jeremiaspini7@gmail.com
 
 ¡Buenas tardes!
