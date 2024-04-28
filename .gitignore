@@ -1,0 +1,14 @@
+# Ignore build artifacts
+/bin/
+/obj/
+/.vs/
+
+
+# Ignore user-specific files
+/appsettings.json
+/.vscode/
+
+# Ignore log files
+*.log
+rpg-1.csproj
+rpg-1.sln
