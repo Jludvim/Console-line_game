@@ -8,7 +8,7 @@ It is a small project that names and creates many classes that could be sensible
 install the repo:
 
 ```
-git clone https://github.com/Jludvim/Game_Backend
+git clone https://github.com/Jludvim/Game_Backend.git
 cd Game_Backend
 ```
 
@@ -16,12 +16,17 @@ get the .NET Core SDK and follow the installing instructions
 https://dotnet.microsoft.com/es-es/download
 
 
-And finally try:
+Try:
 ```
  dotnet --version
 ```
-
 if it works, you are good to go
+
+Compile and execute:
+```
+dotnet compile
+dotnet run
+```
 
 ## Contact
 Feel free to contact me at:
