@@ -5,8 +5,7 @@ using AllObjects;
 namespace basicClasses{
 
       /*
-
-      General Purpose file in which many objects are defined, 
+       General Purpose file in which many objects are defined, 
       Chiefly the map and location classes, but also the Entity class
       from which most elements do derive in the program,
       even if its use wasn't determined at the beginning. (See readme.md)
@@ -15,20 +14,24 @@ namespace basicClasses{
          
       Surely enough, this does lack some basic work
       */
+      
+      /*
+      Archivo para usso generales en el que varias clases se definen. 
+      Principalmente el mapa y casilla o ubicación, pero también entidad, de la cual la mayoría de elementos del programa derivan aún sin tener un uso determinado en un principio. (Véase readme.md)
+      La mayor parte de las clases no están completamente desarrollada, tener miembros, relaciones, e interacciones lógicas faltantes, pero una dirección general pudo, si con suerte, describirse.
+      */
 
    public class Map
    {
-         /*it could be more sensible to set the map size in the constructor
-         *  It would need a bit of refactoring of procceding any further
-         */
-      uint x=10;
-      uint y=10;
+      uint sizeX=10;
+      uint sizeY=10;
       private Location[,] locations = new Location[10,10];
       uint time;
 
 
       Map(){
-         locations[0,0].setGround(Location.grounds.grass);
+         
+      locations[0,0].setGround(Location.grounds.grass);
       }
 
    }
@@ -48,7 +51,7 @@ public class Location{
          ground=groundValue;
       }
 
-         //needs setters
+         //necesita setters
    }
 
    public class tile{
