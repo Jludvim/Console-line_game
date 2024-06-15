@@ -1,19 +1,22 @@
 using livingBeings;
 
 namespace OtherCreatures{
-   /*class for monsters "Auurgh!"
-    *
-    */
+ /*
+ This is a file in which the monster class is defined, and gives room for the definition of many other classes that are non-human.
+ It does derive from LivingBeing, and defines many overloads to create characters.
+ Some defining no feature, and using default stat-values (see line 20), 
+ defining basic physical attributes and a name to idenfity it (hp, strength, speed, agility, intelligence, endurance and a name) (line 32),
+ defining basic physical attributes without a name to identify the instance (line 43),
+ and lastly a constructor that takes an integer as an overload parameter and returns an object of the type of the following presets, correspondingly:
+aldean 1, hunter 2, everyday fighter 3, real fighter 4, Swordman 5, hobbit 6, heracles 7, Samson 9 (line 56) 
+ */
+   
         class Monster : LivingBeing
         {
             public String monstername;
 
 
-            /*constructors
-             * They follow the same structure as those of the human class
-             *   There is a parameter-less build, a fully configurable constructor for the monster,
-             *   And last, one that configures its status without setting a name
-             */
+          
             public Monster()
             {
                 this.Hp = 100;
@@ -48,7 +51,7 @@ namespace OtherCreatures{
                 this.monstername = "Unnamed wild monster";
             }
 
-            /*Monster rooster:
+            /*Monstruos:
              * 1. normal monster, 2. goblin, 3. troll, 4. wolf, 5. minotaur*/
             public Monster(int overload)
             {
