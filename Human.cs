@@ -2,6 +2,15 @@
 
  //clase humana
 namespace humanities{
+
+ /*
+ This is a file in which the human class is defined. It does derive from LivingBeing, and defines many overloads to create characters.
+ Some defining no feature, and using default stat-values (see line 20), 
+ defining basic physical attributes and a name to idenfity it (hp, strength, speed, agility, intelligence, endurance and a name) (line 33),
+ defining basic physical attributes without a name to identify the instance (line 45),
+ and lastly a constructor that takes an integer as an overload parameter and returns an object of the type of the following presets, correspondingly:
+aldean 1, hunter 2, everyday fighter 3, real fighter 4, Swordman 5, hobbit 6, heracles 7, Samson 9 (line 62) 
+ */
         class Human : LivingBeing
         {
  
