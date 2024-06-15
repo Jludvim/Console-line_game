@@ -2,6 +2,32 @@ using basicClasses;
 
 namespace livingBeings{
 
+/*
+This is a class that defines an abstract structure for living beings. Gives certain parameters, variables, and methods relevant to be used (atk and def). 
+Called Living Beings, as such it does considers beings as would be capable of interacting with their surroundings in ways meaningful for the play.
+However, not all of the presented properties are meaningful for any sub-classes we could consider for living beings.
+The aim was rather to define the animated participating characters.
+
+Yet these cases could presumably be solved with a zero value for the mentioned properties,
+or just dealt with as common objects instead of living beings, and refactor the naming of this class.
+*/
+
+/*
+The class defines some physical properties and their setters: hp, strength, speed, agility, intelligence, endurance, and name.
+
+An attack function, which defines an atk value based on the stats of the caller, and weights it using a randomly generated number. 
+Having three cases: Lucky, normal, unlucky.
+
+A defend function, which defines a def value based on the stats of the caller, and three random scenarios: avoided, lucky, neutral, unlucky scenarios.
+
+A string generating function, which is used by both atk and defend functions to return a text-description of the action and its effectiveness.
+
+A still alive boolean function, that returns true if the LivingBeing object hp is equal or greater than 0.
+
+Last, an abstract sound function.
+*/
+
+            
 public abstract class LivingBeing : Entity
 {
             protected double Hp;
@@ -84,7 +110,7 @@ public string actionString(int num, bool attacking){
         }
 
                 
-        else{ /*If attacking isn't true, we are defending*/
+        else{ /*Si attacking es falso, estamos defendiendo*/
                 if(num == -999) {
                     strEffective ="It was avoided!";
                 }
