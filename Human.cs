@@ -122,7 +122,7 @@ aldean 1, hunter 2, everyday fighter 3, real fighter 4, Swordman 5, hobbit 6, he
                     this.Speed = 20;
                     this.Agility = 25;
                     this.Endurance = 15;
-                    //bool luck = true; /*needs a proper implementation!*/
+                    //bool luck = true; /*Parece una buena idea*/
 
                 }
 
@@ -136,7 +136,7 @@ aldean 1, hunter 2, everyday fighter 3, real fighter 4, Swordman 5, hobbit 6, he
                     this.Endurance = 200;
                 }
 
-                /*Couldn't think of anything between, and liked the 9 for Samson*/
+                /*Me gusta el 9 para Sansón*/
 
                 else if (overload == 9)
                 {
