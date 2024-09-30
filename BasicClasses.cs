@@ -8,17 +8,15 @@ namespace basicClasses{
        General Purpose file in which many objects are defined, 
       Chiefly the map and location classes, but also the Entity class
       from which most elements do derive in the program,
-      even if its use wasn't determined at the beginning. (See readme.md)
+      even if its use wasn't determined at the beginning.
       Most of the classes here displayed are yet not fully developed, they might still lack members,
-      logic, and coordination. Yet if looked at, a fair idea of the direction it is aimed at could be formed
-         
-      Surely enough, this does lack some basic work
+      logic, and coordination. But it was only an exploration of OOP.
       */
       
       /*
-      Archivo para usso generales en el que varias clases se definen. 
-      Principalmente el mapa y casilla o ubicación, pero también entidad, de la cual la mayoría de elementos del programa derivan aún sin tener un uso determinado en un principio. (Véase readme.md)
-      La mayor parte de las clases no están completamente desarrollada, tener miembros, relaciones, e interacciones lógicas faltantes, pero una dirección general pudo, si con suerte, describirse.
+      Archivo para uso generales en el que varias clases se definen. 
+      Principalmente el mapa y casilla o ubicación, pero también entidad, de la cual la mayoría de elementos del programa derivan
+      La mayor parte de las clases no están completamente desarrolladas
       */
 
    public class Map

@@ -2,34 +2,10 @@ using basicClasses;
 
 namespace livingBeings{
 
-/*
-This is a class that defines an abstract structure for living beings. Gives certain parameters, variables, and methods relevant to be used (atk and def). 
-Called Living Beings, as such it does considers beings as would be capable of interacting with their surroundings in ways meaningful for the play.
-However, not all of the presented properties are meaningful for any sub-classes we could consider for living beings.
-The aim was rather to define the animated participating characters.
-
-Yet these cases could presumably be solved with a zero value for the mentioned properties,
-or just dealt with as common objects instead of living beings, and refactor the naming of this class.
-*/
-
-/*
-The class defines some physical properties and their setters: hp, strength, speed, agility, intelligence, endurance, and name.
-
-An attack function, which defines an atk value based on the stats of the caller, and weights it using a randomly generated number. 
-Having three cases: Lucky, normal, unlucky.
-
-A defend function, which defines a def value based on the stats of the caller, and three random scenarios: avoided, lucky, neutral, unlucky scenarios.
-
-A string generating function, which is used by both atk and defend functions to return a text-description of the action and its effectiveness.
-
-A still alive boolean function, that returns true if the LivingBeing object hp is equal or greater than 0.
-
-Last, an abstract sound function.
-*/
-
             
 public abstract class LivingBeing : Entity
 {
+            public string typeOfCreature="";
             protected double Hp;
             protected int Strength;
             protected int Speed;
@@ -60,19 +36,22 @@ public abstract class LivingBeing : Entity
 
 
             //función de ataque
-            public (double, string) attack()
-            {
-            
-
-                /*
+                 /*
                  * funcionalidades:
-                 * calcular el ataque del personaje en base sus valores de status
+                 * calcular el ataque del personaje en base sus valores de status, y movimiento
                  * definir un valor aleatorio utilizando la función rand (1-3)
                  * pesar el valor inicial en base al valor aleatorio (suerte)
                  */
 
+
+
+            public (double, string) attack(double unitsPower) //Maybe add attackPower and defensePower, or something more global 
+            {
+                
+                double attack;
+                attack = unitsPower;
                 string strEffective;
-                double attack = this.Strength + 0.1 * this.Speed + 0.3 * this.Endurance;
+
                 int num;
                 Random rand = new Random();
                 num = rand.Next(1, 3);
@@ -89,53 +68,74 @@ public abstract class LivingBeing : Entity
                 return (attack, strEffective);
             }
 
-public string actionString(int num, bool attacking){
-        string strEffective="";
-              
-        if(attacking == true){
-            if (num == 1)
-            {
-                strEffective = "Was a great attack";
-            }
 
-            else if (num == 2)
+            public (double, string) basic_attack() //Maybe add attackPower and defensePower, or something more global 
             {
-                strEffective = "normal attack";
-            }
-
-            else if (num == 3)
-            {
-                strEffective = "an inefficient attack";
-            }
-        }
-
                 
-        else{ /*Si attacking es falso, estamos defendiendo*/
-                if(num == -999) {
-                    strEffective ="It was avoided!";
-                }
-                else{
-                        if (num == 1)
-                        {
-                            strEffective = "A firm defense";
-                        }
+                double attack;
+                attack = (this.getStrength() + 0.1 * this.getSpeed()+ 0.3 * this.getEndurance()) / 2;
+                string strEffective;
 
-                        else if (num == 2)
-                        {
-                            strEffective = "Decent defense";
-                        }
+                int num;
+                Random rand = new Random();
+                num = rand.Next(1, 3);
 
-                        else if (num == 3)
-                        {
-                            strEffective = "Poorly defended";
-                        }
-                    }
+
+                 /* sobre cálculo de ataque:
+                 *1: siendo el valor aleatorio menor que 2, el ataque devuelto será mayor
+                 *2: devolverá los valores correspondientes a su status
+                 *3: la efectividad de la acción se reduce
+                 */
+                attack = attack * (2 / num); 
+                strEffective = actionString(num, true);
+
+                return (attack, strEffective);
             }
-         return strEffective;
-        }
-            
 
-            
+            public string actionString(int num, bool attacking){
+            string strEffective="";
+              
+            if(attacking == true){
+                if (num == 1)
+                {
+                    strEffective = "Attack execution was great";
+                }
+
+                else if (num == 2)
+                {
+                    strEffective = "A decent execution";
+                }
+
+                else if (num == 3)
+                {
+                    strEffective = "a bad attack";
+                }
+            }
+
+                    
+            else{ /*Si attacking es falso, estamos defendiendo*/
+                    if(num == -999) {
+                        strEffective ="The attack was avoided!";
+                    }
+                    else{
+                            if (num == 1)
+                            {
+                                strEffective = "A firm defense";
+                            }
+
+                            else if (num == 2)
+                            {
+                                strEffective = "Decent defense";
+                            }
+
+                            else if (num == 3)
+                            {
+                                strEffective = "Poorly defended";
+                            }
+                        }
+                }
+            return strEffective;
+        }
 
             
             //función de defensa
@@ -193,6 +193,13 @@ public string actionString(int num, bool attacking){
                 return alive;
             }
 
+
+
+
             public abstract void sound();
+
+            public abstract string[] getAttackStrings();
+
+            public abstract (double,string) attackSelector(string atk);
     }
 }

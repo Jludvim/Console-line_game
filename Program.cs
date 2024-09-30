@@ -4,7 +4,6 @@ using System.Runtime.Serialization;
 using System.Text.Json.Serialization.Metadata;
  using livingBeings;
  using  humanities;
- using OtherCreatures;
 
 namespace game
 {
@@ -23,31 +22,227 @@ namespace game
 
         //funciones
 
-        public static double damage(double attackerAct, double defenderAct)
+        public static double damage(double attackerActionScore, double defenderActionScore)
         {
             double damage = 0;
 
 
-            if (defenderAct == -999) /*si defensa es -999*/ { damage = 0;
+            if (defenderActionScore == -999) /*si defensa es -999*/ { damage = 0;
                 Console.WriteLine("It was avoided!");
             }
             else {
-                damage = attackerAct - defenderAct; }
+                if(attackerActionScore > defenderActionScore)
+                {
+                damage = attackerActionScore - defenderActionScore;
+                }
+                else{
+                    damage = 0;
+                }
+            }
             return damage;
         }
 
 
 
-        /*Only visually relevant*/
-        public static void bars()
+        public static void bars(string argument)
         {
-            for (int i = 0; i < 17; i++) { Console.Write("//"); }
+            Console.WriteLine();
+            for (int i = 0; i < 17; i++) { Console.Write(argument); }
+        }
+
+
+        public static int pickCharacter(string type){
+
+            bool validChoice;
+            int chooseVal = 0;
+            type = type.ToLower();
+
+                do
+                {
+                    bars("//");
+                    Console.WriteLine("\n\n Pick a character from the rooster: ");
+                    if(type == "monster"){
+                        for(int i=0; i<Monster.namesByNumericOverload.Length;i++){
+                            Console.WriteLine(i+" - "+ Monster.namesByNumericOverload[i]);
+                        }
+                    }
+                    if(type == "human"){                        
+                        for(int i=0; i<Human.namesByNumericOverload.Length;i++){
+                            Console.WriteLine(i+" - "+Human.namesByNumericOverload[i]);
+                        }
+                    }
+                    bars("--");
+
+                    
+                    validChoice = false;
+                    try
+                    {
+                        Console.Write("\n============>"); chooseVal = int.Parse(Console.ReadLine());
+                    }
+                    catch (Exception)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("There has been an error, input a value from the rooster");
+                    }
+
+                    if(type == "human"){
+                        if(chooseVal > Human.namesByNumericOverload.Length-1 || chooseVal<0){
+                            Console.WriteLine("Choosen value is not within the allowed range");
+                            validChoice = false;
+
+                        }
+                        else{
+                            validChoice = true;
+                        }
+                    }
+                    if(type == "monster"){
+                        if(chooseVal > Monster.namesByNumericOverload.Length-1 || chooseVal<0){
+                            Console.WriteLine("Choosen value is not within the allowed range");
+                            validChoice = false;
+                        }
+                        else{
+                            validChoice = true;
+                        }
+                    }
+                } while(validChoice == false);
+
+                return chooseVal;
+        }
+
+
+        public static (double, string) chooseAttack(Human attacker, Monster enemy){
+            int answer=0;
+            double WeightedAtkScore;
+            string strEffective;
+            do{
+                try
+                {
+                    string listOfAttacksString = "\nChoose an attack: ";
+                    for(int i=0; i<attacker.attackStrings.Length; i++){
+                        listOfAttacksString += "\n"+ (i+1) + ". " + attacker.attackStrings[i];
+                    }
+                    Console.Clear();
+                    bars("/////");
+                    Console.Write("\nYour hp: "+ attacker.gethp()+ "\nEnemy's hp: "+ enemy.gethp()); //this should be fixed
+                    bars("  ");
+                    Console.Write(listOfAttacksString);
+                    bars("|||||");
+                    Console.Write("\n========>"); answer = int.Parse(Console.ReadLine());
+                    bars("/////");
+                    if(answer < 1 && answer > attacker.attackStrings.Length) 
+                    {
+                        Console.WriteLine("Error, invalid input, press a key to try again _"); Console.ReadKey(); 
+                    }
+                }
+                catch(System.FormatException){
+                    Console.WriteLine("Error. Input should be an integer value. Press a key to try again");
+                    Console.ReadKey(); 
+                }
+            } while(answer < 1 && answer > attacker.attackStrings.Length);
+
+            answer--; //Indexes had been increased by 1 for user readibility
             
+            (WeightedAtkScore, strEffective) = /*function*/attack(attacker,answer);
+            
+            string action = "\n"+attacker.getName()+" uses "+attacker.attackStrings[answer]+"!\n"+strEffective;
+
+            return (WeightedAtkScore, action);
+        }
+
+        public static (double, string) attack(LivingBeing attacker, int movementChosen){
+            
+            double attack;
+            string strEffective;
+            string movement="";
+
+            string[] attackStrings = attacker.getAttackStrings();
+
+                movement = attackStrings[movementChosen];
+
+            (attack, strEffective) = attacker.attackSelector(movement);
+
+            return (attack, strEffective);
+
+
+        }
+
+        public static void fight(Human user, Monster enemy){
+            double manAction, beastAction, damage;
+            string atkEffective, defEffective;
+            
+            do{  
+                    manAction = 0;
+                    beastAction = 0; 
+                    damage = 0;
+
+                        if (user.stillAlive() == true) //Given that attacks happens in turns, enemy should still be alive
+                        {
+                            Console.WriteLine(user.name + " attacks " + enemy.name);
+                            (manAction, atkEffective) = chooseAttack(user, enemy);
+                            (beastAction, defEffective) = enemy.defend();
+                            damage = game.damage(manAction, beastAction);
+
+                            enemy.sethp(enemy.gethp() - damage);
+
+                            Console.WriteLine(atkEffective);
+                            Console.WriteLine(defEffective);
+
+                            Console.WriteLine(user.name + "'s HP: " + user.gethp());
+                            Console.WriteLine(enemy.name + "'s HP: " + enemy.gethp());
+                            Console.WriteLine("Damage dealt: " + damage);
+                        }
+
+                        Console.Write("\nPress enter to continue...\n"); Console.ReadKey();
+                        Console.WriteLine("");
+
+                        if (enemy.stillAlive() == true)
+                        {
+                            Console.WriteLine(enemy.name + " attacks " + user.name);
+                            (beastAction, atkEffective) = enemy.basic_attack();
+                            (manAction, defEffective) = user.defend();
+                            damage = game.damage(beastAction, manAction);
+                            user.sethp(user.gethp() - damage);
+
+                            Console.WriteLine(atkEffective);
+                            Console.WriteLine(defEffective);
+                            Console.WriteLine(user.name + "'s HP: " + user.gethp());
+                            Console.WriteLine(enemy.name + "'s HP: " + enemy.gethp());
+                            Console.WriteLine("Damage dealt: " + damage);
+
+                            Console.Write("\nPress enter to continue...\n"); Console.ReadKey();
+                            Console.WriteLine("");
+                        }
+                        if (user.gethp() <= 0 || enemy.gethp() <= 0)
+                        {
+                            Console.WriteLine("The battle is over.");
+                            if (user.gethp() <= 0)
+                            {
+                                Console.WriteLine(user.name + " can't continue, beast wins!");
+                                enemy.sound();
+                            }
+                            else if (enemy.gethp() <= 0)
+                            {
+                                Console.WriteLine(enemy.name + " can't continue, man wins!");
+                                user.sound();
+                            }
+                            Console.WriteLine("Battle finished.");
+
+
+                            Console.Write("Press a key to exit");
+                            Console.ReadKey();
+                        }
+                } while (user.gethp() > 0 && enemy.gethp() > 0);
         }
 
 
 
+        public static int getRandomValueWithinRange(int a, int b){
+            int num;
+                Random rand = new Random();
+                num = rand.Next(a, b);
 
+            return num;
+        }
 
         /**
          * @dev Una implementación sencilla utilizando solamente las clases monstruo y persona
@@ -67,159 +262,34 @@ namespace game
             do
             {
                 Console.Clear();
-                bars();
+                bars("//");
+                int chooseVal;
 
-
-                int chooseVal = 0;
-                bool validChoice = false;
-
-
-
-                Monster beast;
-                /*Iteración que busca conseguir un valor para definir el adversario*/
-                do
-                {
-                    Console.WriteLine("\n\n Pick a monster from the rooster: ");
-                    Console.WriteLine("-Normal Monster (1) \n-Goblin (2) \n-Troll (3) \n-Wolf (4) \n-Minotaur (5)");
-                    for (int i = 0; i < 10; i++) { Console.Write("-"); }
-
-
-                    try
-                    {
-                        Console.WriteLine("\n============>"); chooseVal = int.Parse(Console.ReadLine());
-                        validChoice = true;
-                    
-                    }
-                    catch (Exception)
-                    {
-
-                        validChoice = false;
-                        Console.WriteLine("There has been an error, input a value from the rooster");
-                    }
-
-
-                    if (chooseVal < 1 || chooseVal > 5) { validChoice = false; }
-                    else { validChoice = true; }
-                    /*Valores aceptados: Normal monster 1, Goblin 2, troll 3, wolf 4, minotaur 5*/
-
-
-                } while (validChoice == false);
-
-                beast = new Monster(chooseVal);
-
-
-       
-
-
-                Console.Clear();
-
+                chooseVal = pickCharacter("human");
                 Human man;
-                do
-                {
-                    bars();
-                    Console.WriteLine("\n\n Pick a person from the rooster: ");
-                    Console.WriteLine("-Aldean (1) \n-Hunter (2) \n-Every-day fighter (3) \n-Real Fighter (4) \n-Swordman (5)" +
-                        "\n-Hobbit (6) \n-Heracles (7) \n-Samson (9)");
-                    for (int i = 0; i < 10; i++) { Console.Write("-"); }
-
-                    chooseVal = 0;
-                    validChoice = false;
-                    try
-                    {
-                        Console.WriteLine("\n============>"); chooseVal = int.Parse(Console.ReadLine());
-                        validChoice = true;
-                    }
-                    catch (Exception)
-                    {
-                        validChoice = false;
-                        Console.WriteLine("There has been an error, input a value from the rooster");
-                    }
-
-
-                    if (chooseVal<1 || chooseVal>9) { validChoice = false; }
-                    else { validChoice = true; }
-                    /*valores aceptados:
-                    * aldean 1, hunter 2, everyday fighter 3, real fighter 4, Swordman 5,
-                    * hobbit 6, heracles 7, Samson 9*/
-
-                } while (validChoice == false);
-
                 man = new Human(chooseVal);
 
+                chooseVal = pickCharacter("monster");
+                Monster beast;
+                beast = new Monster(chooseVal);
                 Console.Clear();
-                Console.WriteLine("Press enter to start"); Console.ReadKey();
+
+                Console.Clear();
+                Console.Write("Press a key to start"); Console.ReadKey();
                 Console.WriteLine("");
 
-                do
-                {
-                    double manAct,
-                        beastAct,
-                        damage;
-                        string atkEffective, defEffective;
-                   
-                    if (man.stillAlive() == true)
-                    {
-                        Console.WriteLine(man.name + " attacks " + beast.monstername);
-                        (manAct, atkEffective) = man.attack();
-                        (beastAct, defEffective) = beast.defend();
-                        damage = game.damage(manAct,beastAct);
-
-                        beast.sethp(beast.gethp() - damage);
-
-                        Console.WriteLine(atkEffective);
-                        Console.WriteLine(defEffective);
-                        Console.WriteLine(man.name + "'s HP: " + man.gethp());
-                        Console.WriteLine(beast.monstername + "'s HP: " + beast.gethp());
-                        Console.WriteLine("Damage dealt: " + damage);
-                    }
-
-                    Console.Write("\nPress enter to continue...\n"); Console.ReadKey();
-                    Console.WriteLine("");
-
-                    if (beast.stillAlive() == true)
-                    {
-                        Console.WriteLine(beast.monstername + " attacks " + man.name);
-                        (beastAct, atkEffective) = beast.attack();
-                        (manAct, defEffective) = man.defend();
-                        damage = game.damage(beastAct, manAct);
-                        man.sethp(man.gethp() - damage);
-
-                        Console.WriteLine(atkEffective);
-                        Console.WriteLine(defEffective);
-                        Console.WriteLine(man.name + "'s HP: " + man.gethp());
-                        Console.WriteLine(beast.monstername + "'s HP: " + beast.gethp());
-                        Console.WriteLine("Damage dealt: " + damage);
-
-                        Console.Write("\nPress enter to continue...\n"); Console.ReadKey();
-                        Console.WriteLine("");
-                    }
-                    if (man.gethp() <= 0 || beast.gethp() <= 0)
-                    {
-                        Console.WriteLine("The battle is over.");
-                        if (man.gethp() <= 0)
-                        {
-                            Console.WriteLine(man.name + " can't continue, beast wins!");
-                            beast.sound();
-                        }
-                        else if (beast.gethp() <= 0)
-                        {
-                            Console.WriteLine(beast.monstername + " can't continue, man wins!");
-                            man.sound();
-                        }
-                        Console.WriteLine("Battle finished.");
-
-
-                        Console.Write("Press a key to exit");
-                        Console.ReadKey();
-                    }
-                } while (man.gethp() > 0 && beast.gethp() > 0);
+                fight(man, beast);
 
                 do
                 {
-                    Console.WriteLine("Do you wish to continue? ('s' to accept, 'n' to exit)");
+                    bars("|--|");
+                    Console.WriteLine("\nDo you wish to continue? ('s' to accept, 'n' to exit)");
                     Console.Write("=======>"); s = Console.ReadLine();
+                    s = s.ToLower();
                 } while (s != "s" && s != "n");
 
+
+                //Do-while game loop
             } while (s == "s");
 
             if (s == "n")
@@ -229,5 +299,4 @@ namespace game
             }
         }
     }
-
 }
